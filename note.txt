@@ -1,0 +1,104 @@
+Command line
+==========================
+
+ng new countryApp
+ng serve -o
+
+Crear los modulos countries y shared
+ng g m countries
+ng g m shared
+
+Importar el modulo shared en el AppComponent
+@NgModule({
+  declarations: [AppComponent],
+  imports: [BrowserModule, SharedModule],
+  providers: [],
+  bootstrap: [AppComponent],
+})
+export class AppModule {}
+
+Dentro de la carpeta shared crear una carpeta "pages"
+Dentro de pages los componentes: homepage, aboutpage, contactpage.
+
+Routing
+===================================
+1.Crear en la carpeta App el archivo app-routing.module.ts
+
+import { NgModule } from '@angular/core';
+import { Routes } from '@angular/router';
+import { HomePageComponent } from './shared/pages/home-page/home-page.component';
+import { AboutPageComponent } from './shared/pages/about-page/about-page.component';
+import { ContactPageComponent } from './shared/pages/contact-page/contact-page.component';
+
+const routes: Routes = [
+  {
+    path: 'home',
+    component: HomePageComponent,
+  },
+  {
+    path: 'about',
+    component: AboutPageComponent,
+  },
+  {
+    path: 'contact',
+    component: ContactPageComponent,
+  },
+  {
+    path: '**',
+    redirectTo: 'home',
+  },
+];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule],
+})
+export class AppRoutingModule {}
+
+2.Importar el AppRoutingModule en el AppModule
+3. <router-outlet></router-outlet> para visualizar las rutas
+
+4.RouterLink
+================================
+Ahora que tenemos las rutas podemos crear un nav para poder ir a las secciones
+en los list items hay que usar la propiedad Routerlink="...ruta"
+
+Si nos da un error es porque el modulo shared desconoce el routerModule, los list items no saben que hacer con el Routerlink.
+Para eso hay que importar en el modulo de shared el modulo routerModule.
+
+
+5.LazyLoading
+================================
+Hay veces que el usuario nunca entra a una seccion del sitio y no es necesario que este integrada al modulo principal de la pagina.
+Sino que podemos crearlo cuando el usuario entra o solicita la seccion.
+Esto facilita a que la apliaccion se mas liviana.
+
+Ej: autenticacion ... la necesitamos en todos los modulos pero la seccion "FAQ" no, y el usuario no tiene preguntas entonces la solicitamos como carga perezosa cuando el usuario requiera.
+
+
+1er Router es "forRoot" y es unico
+2do o mas routers son "forChild"
+
+El modulo es identico al forRoot pero cambian las rutas y se integra con el forchild.
+
+Lo vamos a implementar el la seccion de countries.
+
+Dentro de countries creamos el modulo de routing como "countries.routing.module.ts"
+
+Creamos la carpeta "pages" dentro de countries.
+creamos los componentes "byCountry", "byCapital" y "byRegion"
+Exportamos el RouterModule.forChild
+
+En el module countries.module importamos el CountriesRoutingModule
+
+Para hacer la carga perezosa tenemos que ir al AppRoutingModule y definir ahi lo siguiente
+{
+    path: 'countries',
+    loadChildren: () =>
+      import('./countries/countries.module').then(
+        (module) => module.CountriesModule
+      ),
+  },
+
+en el import, que es una promesa, definimos el path de countries.module y no el de routing ya que el CountriesModule importa el CountriesRoutingModule
+Si revisamos el AppModule notaremos que no tenemos definido ningun modulo de countries.

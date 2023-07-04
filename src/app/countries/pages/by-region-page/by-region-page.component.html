@@ -1,0 +1,20 @@
+<h2>By Region</h2>
+<hr />
+
+<div class="row">
+  <div class="col">
+    <shared-search-box
+      placeholder="By region"
+      (onValue)="searchByRegion($event)"
+    ></shared-search-box>
+  </div>
+</div>
+
+<div class="row mt-4">
+  <div class="col" *ngIf="countriesByRegion.length === 0; else showResults">
+    <p class="alert alert-warning">No results to show.</p>
+  </div>
+  <ng-template #showResults>
+    <countries-table [countries]="countriesByRegion"></countries-table>
+  </ng-template>
+</div>

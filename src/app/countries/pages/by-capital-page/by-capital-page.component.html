@@ -5,12 +5,14 @@
   <div class="col">
     <shared-search-box
       placeholder="By capital"
-      (onValue)="searchByCapital($event)"
+      [initialValue]="initialValue"
+      (onDebounce)="searchByCapital($event)"
     ></shared-search-box>
   </div>
 </div>
 
 <div class="row mt-4">
+  <shared-loading-spinner *ngIf="isLoading"></shared-loading-spinner>
   <div class="col" *ngIf="countriesByCapital.length === 0; else showResults">
     <p class="alert alert-warning">No results to show.</p>
   </div>

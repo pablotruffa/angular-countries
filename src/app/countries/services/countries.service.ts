@@ -8,7 +8,7 @@ import { Region } from '../interfaces/region.type';
 @Injectable({ providedIn: 'root' })
 export class CountriesService {
   private ApiUrl: string = 'https://restcountries.com/v3.1';
-
+  public author: string = 'Pablo Truffa';
   public cacheStore: CacheStore = {
     byCapital: {
       term: '',
